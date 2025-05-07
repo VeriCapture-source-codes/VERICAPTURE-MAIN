@@ -1,4 +1,5 @@
 import './App.css'
+import './Components/SideMenu.css'
 import { Routes, Route } from 'react-router-dom'
 import ForgotPassword from './ForgetPassword.jsx'
 import VerifyResetOtp from './VerifyOtp.jsx'
@@ -8,6 +9,9 @@ import ExplorePage from './Explore.jsx'
 import LoginPage from './Login.jsx'
 import Register from './Register.jsx'
 import Profile from './CreateProfile.jsx'
+import LandingPage from './LandingPage.jsx'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Home from './Home.jsx'
 
 function App() {
   return (
@@ -24,8 +28,10 @@ function App() {
         }} />
 
       <Routes>
+      <Route path="/" element={<LandingPage />} />
+
         {/* Home Page Router */}
-      <Route path="/" element={<div className="text-center mt-10 text-2xl">Welcome Home 🚀</div>} />
+      <Route path="/home" element={<Home/>} />
 
         {/* Forgot Password Router */}
         <Route path="/forgot-password" element={<ForgotPassword />} />

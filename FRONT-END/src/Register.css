@@ -5,13 +5,7 @@
   
 }
 
-body, html {
-   background-color: #f4f4f4;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Segoe UI', sans-serif;
-}
+
 
 /* Container */
 .auth-container {

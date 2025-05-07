@@ -18,9 +18,10 @@
   border-right: 1px solid #e5e7eb;
 }
 
-.sidebar-logo {
-  margin-bottom: 2.5rem;
+.sidebar-logo img {
+  margin-bottom: 1rem;
   width: 50%;
+  
   
 }
 
@@ -196,6 +197,34 @@
 
 .icon-btn svg:hover {
   stroke: #007bff;
+}
+
+/* avatar and username */
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+}
+
+.username {
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Post likes */
+.like-count {
+  font-size: 14px;
+  color: #555;
 }
 
 @media (min-width: 640px) {

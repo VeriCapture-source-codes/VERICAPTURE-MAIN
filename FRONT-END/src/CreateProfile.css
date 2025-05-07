@@ -1,21 +1,6 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
+
   
-  body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    font-family: "Open Sans", sans-serif;
-    background-color: #e7e7e7;
-    color: #333;
-    text-align: center;
-    line-height: 1.6;
-  }
-  
+ 
  /* Navigation Bar - Full Width */
 #nav2 {
   position: fixed;

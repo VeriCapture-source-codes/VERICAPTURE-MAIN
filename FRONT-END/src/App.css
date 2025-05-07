@@ -6,6 +6,34 @@
     padding: 10px 15px;
     background-color: #f0f0f0;
 }
+.main-cont{
+    background-color: #d9d9d9;
+}
+.custom-nav-link {
+    color: #4C5665 !important;
+    font-weight: 500;
+  }
+  
+  .custom-nav-link.active {
+    color: #000 !important;
+  }
+
+  .left-space{
+    margin-left: 10px !important;
+  }
+  
+.btn-no-radius {
+    border-radius: 5 !important;
+  }
+.loginbtn{
+    background-color: #f0f0f0;
+    color: #4C5665;
+}
+.loginbtn img{
+    height: 20px;
+    width: 20px;
+    margin-right: 20px;
+}
 .my-btn{
     background-color: #4CAF50; /* Green */
     border: none;

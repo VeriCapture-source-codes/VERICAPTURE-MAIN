@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { apiRequest } from './utils/api';
 import { Heart, Edit, Trash2 } from 'lucide-react';
@@ -6,6 +6,11 @@ import './CommentSection.css';
 
 const CommentSection = ({ postId, comments = [], refreshPosts }) => {
   const [newComment, setNewComment] = useState('');
+  const [localComments, setLocalComments] = useState([]);
+
+  useEffect(() => {
+    setLocalComments(comments);
+  }, [comments]);
   
 
   const handleAddComment = async () => {
@@ -18,11 +23,19 @@ const CommentSection = ({ postId, comments = [], refreshPosts }) => {
         body: { text: newComment },
       });
 
-      if (result.success) {
+      if (result.success && result.comment) {
         toast.success('Comment added!');
+        const commentWithFlag = { ...result.comment, justAdded: true };
+        setLocalComments(prev => [...prev, commentWithFlag]);
         setNewComment('');
-        refreshPosts();
-      } else {
+      
+         setTimeout(() => {
+          setLocalComments(prev =>
+            prev.map(c => (c._id === commentWithFlag._id ? { ...c, justAdded: false } : c))
+          );
+        }, 2000);
+      }
+      else {
         toast.error(result.message || 'Failed to add comment');
       }
     } catch (error) {
@@ -63,7 +76,8 @@ const CommentSection = ({ postId, comments = [], refreshPosts }) => {
 
       if (result.success) {
         toast.success('Comment deleted!');
-        refreshPosts();
+        setLocalComments(prev => prev.filter(comment => comment._id !== commentId));
+      
       } else {
         toast.error(result.message || 'Failed to delete comment');
       }
@@ -81,7 +95,14 @@ const CommentSection = ({ postId, comments = [], refreshPosts }) => {
 
       if (result.success) {
         toast.success('Comment liked!');
-        refreshPosts();
+        setLocalComments(prev =>
+          prev.map(comment =>
+            comment._id === commentId
+              ? { ...comment, isLiked: !comment.isLiked }
+              : comment
+          )
+        );
+        
       } else {
         toast.error(result.message || 'Failed to like comment');
       }
@@ -92,8 +113,8 @@ const CommentSection = ({ postId, comments = [], refreshPosts }) => {
 
   return (
     <div className="comment-section">
-      {comments.map((comment) => (
-        <div key={comment._id} className="comment">
+      {localComments.map((comment) => (
+        <div key={comment._id} className={`comment ${comment.justAdded ? 'new-comment' : ''}`}>
           <p>{comment.text}</p>
           <div className="comment-actions">
             <button className="icon-btn" onClick={() => handleLikeComment(comment._id)}title="Like">
