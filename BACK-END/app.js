@@ -16,7 +16,11 @@ const app = express();
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'], 
+    origin: [
+      'http://localhost:5173', 
+      'http://127.0.0.1:5173', 
+      'https://www.vericapture.com.ng', // Add your production domain here
+    ],
     credentials: true,
   })
 );
@@ -29,17 +33,23 @@ app.use(
     secret: process.env.JWT_SECRET,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production", // Secure cookies in production
+      httpOnly: true, // Prevents access to cookies via JavaScript
+    },
   })
 );
 
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Define the routes with different base paths
 app.use("/api/v1/users", userRouter);
-app.use("/api/v1/users", postRouter);
-app.use("/api/v1/users", commentRouter);
-app.use("/api/v1/users", replyRouter);
+app.use("/api/v1/posts", postRouter);  // Change to a unique path
+app.use("/api/v1/comments", commentRouter); // Change to a unique path
+app.use("/api/v1/replies", replyRouter); // Change to a unique path
 
+// 404 Handler
 app.all("*", (req, res, next) => {
   const error = new ApiError(
     404,
@@ -47,10 +57,17 @@ app.all("*", (req, res, next) => {
   );
   return next(error);
 });
+
+// Global Error Handler
 app.use(globalError);
 
-await connectDB();
+async function startServer() {
+  await connectDB();
 
-app.listen(process.env.PORT, () => {
-  logger.info(`Server is listening on http://localhost:${process.env.PORT}`);
-});
+  app.listen(process.env.PORT, () => {
+    logger.info(`Server is listening on http://localhost:${process.env.PORT}`);
+  });
+}
+
+startServer();
+
