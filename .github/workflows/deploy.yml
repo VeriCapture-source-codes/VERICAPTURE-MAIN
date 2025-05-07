@@ -22,18 +22,26 @@ jobs:
       - name: Deploy app to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
-            cd VERICAPTURE-MAIN
+            set -e  # stop script on error
+
+            # Navigate to app directory
+            cd ~/VERICAPTURE-MAIN
             git pull origin main
 
-            # Backend setup
+            # === Backend Setup ===
             cd BACK-END
-            npm install
+            npm ci  # faster & more consistent than install
             pm2 restart vericapture-backend || pm2 start app.js --name vericapture-backend
 
-            # Frontend build & deploy
+            # === Frontend Build ===
             cd ../FRONT-END
-            npm install
+            npm ci
             npm run build
+
+            # === Deploy Built Frontend ===
             sudo rm -rf /var/www/vericapture/*
             sudo cp -r dist/* /var/www/vericapture/
+
+            # Optional: set correct permissions
+            sudo chown -R www-data:www-data /var/www/vericapture
           EOF
