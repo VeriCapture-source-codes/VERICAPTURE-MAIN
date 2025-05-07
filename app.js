@@ -1,18 +1,17 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config(); // should be at the very top
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import connectDB from "./database/connectDB.js";
-import { ApiError, globalError } from "./utils/error.js";
-import userRouter from "./routers/users.routers.js";
+import connectDB from "./BACK-END/database/connectDB.js";
+import { ApiError, globalError } from "./BACK-END/utils/error.js";
+import userRouter from "./BACK-END/routers/users.routers.js";
 import passport from "passport";
 import session from "express-session";
-import postRouter from "./routers/post.routers.js";
-import commentRouter from "./routers/comment.routers.js";
-import replyRouter from "./routers/reply.routers.js";
-import logger from "./utils/logger.js";
-
+import postRouter from "./BACK-EDND/routers/post.routers.js";
+import commentRouter from "./BACK-END/routers/comment.routers.js";
+import replyRouter from "./BACK-END/routers/reply.routers.js";
+import logger from "./BACK-END/utils/logger.js";
 
 const app = express();
 
@@ -20,10 +19,10 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: [
-      'http://localhost:5173', 
-      'http://127.0.0.1:5173', 
-      'https://www.vericapture.com.ng',
-	'https://www.vericapture.com.ng', // Add your production domain here
+      "http://localhost:5173",
+      "http://127.0.0.1:5173",
+      "https://www.vericapture.com.ng",
+      "https://www.vericapture.com.ng", // Add your production domain here
     ],
     credentials: true,
   })
@@ -49,7 +48,7 @@ app.use(passport.session());
 
 // Define the routes with different base paths
 app.use("/api/v1/users", userRouter);
-app.use("/api/v1/posts", postRouter);  // Change to a unique path
+app.use("/api/v1/posts", postRouter); // Change to a unique path
 app.use("/api/v1/comments", commentRouter); // Change to a unique path
 app.use("/api/v1/replies", replyRouter); // Change to a unique path
 
@@ -74,4 +73,3 @@ async function startServer() {
 }
 
 startServer();
-
