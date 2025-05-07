@@ -19,7 +19,8 @@ app.use(
     origin: [
       'http://localhost:5173', 
       'http://127.0.0.1:5173', 
-      'https://www.vericapture.com.ng', // Add your production domain here
+      'https://www.vericapture.com.ng',
+	'https://www.vericapture.com.ng', // Add your production domain here
     ],
     credentials: true,
   })
