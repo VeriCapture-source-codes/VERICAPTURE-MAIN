@@ -3,15 +3,15 @@ dotenv.config(); // should be at the very top
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import connectDB from "./BACK-END/database/connectDB.js";
-import { ApiError, globalError } from "./BACK-END/utils/error.js";
-import userRouter from "./BACK-END/routers/users.routers.js";
+import connectDB from "./database/connectDB.js";
+import { ApiError, globalError } from "./utils/error.js";
+import userRouter from "./routers/users.routers.js";
 import passport from "passport";
 import session from "express-session";
-import postRouter from "./BACK-EDND/routers/post.routers.js";
-import commentRouter from "./BACK-END/routers/comment.routers.js";
-import replyRouter from "./BACK-END/routers/reply.routers.js";
-import logger from "./BACK-END/utils/logger.js";
+import postRouter from "./routers/post.routers.js";
+import commentRouter from "./routers/comment.routers.js";
+import replyRouter from "./routers/reply.routers.js";
+import logger from "./utils/logger.js";
 
 const app = express();
 
