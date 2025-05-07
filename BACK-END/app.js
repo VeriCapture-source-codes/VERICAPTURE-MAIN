@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config(); // should be at the very top
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -10,6 +12,7 @@ import postRouter from "./routers/post.routers.js";
 import commentRouter from "./routers/comment.routers.js";
 import replyRouter from "./routers/reply.routers.js";
 import logger from "./utils/logger.js";
+
 
 const app = express();
 
