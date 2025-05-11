@@ -15,6 +15,7 @@ import userModel from "../models/userModel.js";
 import transporter from "../utils/nodemailer.js";
 import userAuth from "../auth/authMiddleware.js";
 import otpAuth from "../auth/otpAuth.js";
+
 const userRouter = Router();
 
 userRouter.get(

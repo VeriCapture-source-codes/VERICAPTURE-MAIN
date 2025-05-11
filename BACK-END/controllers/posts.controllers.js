@@ -3,70 +3,39 @@ import userModel from "../models/userModel.js";
 import { asyncHandler, ApiError } from "../utils/error.js";
 import cloudinary from "../utils/cloudinary.js";
 
-export const createPost = asyncHandler(async (req, res, next) => {
-  const userId = req.user._id;
+export const createPost = async (req, res, next) => {
+  const userId = req.user?._id;
   if (!userId) {
-    const error = new ApiError(
-      403,
-      "You are not authorized. Please login to continue"
+    return next(
+      new ApiError(403, "You are not authorized. Please login to continue")
     );
-    return next(error);
   }
 
   const loggedInUser = await userModel.findById(userId);
   if (!loggedInUser) {
-    const error = new ApiError(404, "User not found");
-    return next(error);
+    return next(new ApiError(404, "User not found"));
   }
-  // console.log("Received file:", req.file);
 
   const { caption, location, category } = req.body;
 
-  // if (!caption) {
-  //   return next(new ApiError(400, "Caption is required."));
-  // }
-
-  if (!location) {
-    return next(new ApiError(400, "Location is required."));
+  if (!location || !category) {
+    return next(new ApiError(400, "Location and Category are required."));
   }
-
-  if (!category) {
-    return next(new ApiError(400, "Category is required."));
-  }
-
-  // const result = await new Promise((resolve, reject) => {
-  //     const stream = cloudinary.uploader.upload_stream(
-  //         {resource_type: 'auto'},
-  //         (error, result) => {
-  //             if (error) {
-  //                 return reject(error);
-  //             }
-  //             resolve(result);
-  //         }
-  //     );
-  //     stream.end(req.file.buffer);
-  // });
 
   if (!req.file) {
-    return res
-      .status(400)
-      .json({ message: "Either a video or an image is required." });
+    return next(new ApiError(400, "Either a video or an image is required."));
   }
 
-  const result = await new Promise((resolve, reject) => {
+  const uploadResult = await new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
       { resource_type: "auto" },
       (error, result) => {
-        if (error) {
-          return reject(error);
-        }
+        if (error) return reject(error);
         resolve(result);
       }
     );
     stream.end(req.file.buffer);
   });
-
-  const uploadResult = await result;
 
   const post = await postModel.create({
     user: loggedInUser._id,
@@ -82,9 +51,90 @@ export const createPost = asyncHandler(async (req, res, next) => {
     message: "Post upload successful",
     post,
   });
-});
+};
 
-export const getAllPosts = asyncHandler(async (req, res, next) => {
+// export const createPost = async (req, res, next) => {
+//   const userId = req.user._id;
+//   if (!userId) {
+//     const error = new ApiError(
+//       403,
+//       "You are not authorized. Please login to continue"
+//     );
+//     return next(error);
+//   }
+
+//   const loggedInUser = await userModel.findById(userId);
+//   if (!loggedInUser) {
+//     const error = new ApiError(404, "User not found");
+//     return next(error);
+//   }
+//   // console.log("Received file:", req.file);
+
+//   const { caption, location, category } = req.body;
+
+//   // if (!caption) {
+//   //   return next(new ApiError(400, "Caption is required."));
+//   // }
+
+//   if (!location) {
+//     return next(new ApiError(400, "Location is required."));
+//   }
+
+//   if (!category) {
+//     return next(new ApiError(400, "Category is required."));
+//   }
+
+//   // const result = await new Promise((resolve, reject) => {
+//   //     const stream = cloudinary.uploader.upload_stream(
+//   //         {resource_type: 'auto'},
+//   //         (error, result) => {
+//   //             if (error) {
+//   //                 return reject(error);
+//   //             }
+//   //             resolve(result);
+//   //         }
+//   //     );
+//   //     stream.end(req.file.buffer);
+//   // });
+
+//   if (!req.file) {
+//     return res
+//       .status(400)
+//       .json({ message: "Either a video or an image is required." });
+//   }
+
+//   const result = await new Promise((resolve, reject) => {
+//     const stream = cloudinary.uploader.upload_stream(
+//       { resource_type: "auto" },
+//       (error, result) => {
+//         if (error) {
+//           return reject(error);
+//         }
+//         resolve(result);
+//       }
+//     );
+//     stream.end(req.file.buffer);
+//   });
+
+//   const uploadResult = await result;
+
+//   const post = await postModel.create({
+//     user: loggedInUser._id,
+//     media: uploadResult.secure_url,
+//     caption,
+//     location,
+//     category,
+//     cloudinary_id: uploadResult.public_id,
+//   });
+
+//   res.status(201).json({
+//     success: true,
+//     message: "Post upload successful",
+//     post,
+//   });
+// };
+
+export const getAllPosts = async (req, res, next) => {
   const userId = req.user._id;
   if (!userId) {
     const error = new ApiError(
@@ -133,9 +183,9 @@ export const getAllPosts = asyncHandler(async (req, res, next) => {
     hasPrevPage: page > 1,
     posts,
   });
-});
+};
 
-export const fetchUserPosts = asyncHandler(async (req, res, next) => {
+export const fetchUserPosts = async (req, res, next) => {
   const userId = req.user._id;
   if (!userId) {
     const error = new ApiError(
@@ -183,9 +233,9 @@ export const fetchUserPosts = asyncHandler(async (req, res, next) => {
     hasPrevPage: page > 1,
     posts,
   });
-});
+};
 
-export const fetchPostsByLocation = asyncHandler(async (req, res, next) => {
+export const fetchPostsByLocation = async (req, res, next) => {
   const userId = req.user._id;
   const { location } = req.params;
   if (!userId) {
@@ -236,9 +286,9 @@ export const fetchPostsByLocation = asyncHandler(async (req, res, next) => {
     hasPrevPage: page > 1,
     posts,
   });
-});
+};
 
-export const updatePost = asyncHandler(async (req, res, next) => {
+export const updatePost = async (req, res, next) => {
   const userId = req.user._id;
   const { postId } = req.params;
   if (!userId || !postId) {
@@ -329,9 +379,9 @@ export const updatePost = asyncHandler(async (req, res, next) => {
     message: "Post update Successful",
     updatedPost,
   });
-});
+};
 
-export const deletePost = asyncHandler(async (req, res, next) => {
+export const deletePost = async (req, res, next) => {
   const userId = req.user._id;
   const { postId } = req.params;
 
@@ -363,9 +413,9 @@ export const deletePost = asyncHandler(async (req, res, next) => {
     success: true,
     message: "Post deleted successfully",
   });
-});
+};
 
-export const postLikes = asyncHandler(async (req, res, next) => {
+export const postLikes = async (req, res, next) => {
   const userId = req.user._id;
   const { postId } = req.params;
   if (!userId) {
@@ -405,4 +455,4 @@ export const postLikes = asyncHandler(async (req, res, next) => {
     success: true,
     message: hasLiked ? "Post unlike" : "Post like",
   });
-});
+};

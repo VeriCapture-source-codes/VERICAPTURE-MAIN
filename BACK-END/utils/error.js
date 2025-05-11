@@ -66,3 +66,10 @@ export class ApiError extends Error {
     Error.captureStackTrace(this, this.constructor); // Optional: better stack traces
   }
 }
+
+export const notFound = (req, res) => {
+  res.status(404).json({
+    status: false,
+    message: "Invalid URL",
+  });
+};

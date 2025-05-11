@@ -31,6 +31,10 @@ const postSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
+      enum: {
+        values: ["crime", "traffic", "riot"],
+        message: "{VALUE} is not Supported",
+      },
     },
   },
   { timestamps: true }

@@ -4,7 +4,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import connectDB from "./database/connectDB.js";
-import { ApiError, globalError } from "./utils/error.js";
+import { ApiError, globalError, notFound } from "./utils/error.js";
 import userRouter from "./routers/users.routers.js";
 import passport from "passport";
 import session from "express-session";
@@ -12,6 +12,7 @@ import postRouter from "./routers/post.routers.js";
 import commentRouter from "./routers/comment.routers.js";
 import replyRouter from "./routers/reply.routers.js";
 import logger from "./utils/logger.js";
+import "express-async-errors";
 
 const app = express();
 
@@ -53,19 +54,22 @@ app.use("/api/v1/comments", commentRouter); // Change to a unique path
 app.use("/api/v1/replies", replyRouter); // Change to a unique path
 
 // 404 Handler
-app.all("*", (req, res, next) => {
-  const error = new ApiError(
-    404,
-    `Can't find ${req.originalUrl} on the server`
-  );
-  return next(error);
-});
+// app.all("*", (req, res, next) => {
+//   const error = new ApiError(
+//     404,
+//     `Can't find ${req.originalUrl} on the server`
+//   );
+//   return next(error);
+// });
+
+app.use(notFound);
 
 // Global Error Handler
 app.use(globalError);
 
 async function startServer() {
-  await connectDB();
+  await connectDB(process.env.MONGO_URI);
+  console.log("Database Connected..");
 
   app.listen(process.env.PORT, () => {
     logger.info(`Server is listening on http://localhost:${process.env.PORT}`);
