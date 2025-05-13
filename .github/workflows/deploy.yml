@@ -40,6 +40,9 @@ jobs:
 
             # --- FIX vite permission ---
             chmod +x node_modules/.bin/vite
+            chmod +x node_modules/esbuild/bin/esbuild || true
+            chmod +x node_modules/@esbuild/linux-x64/bin/esbuild || true
+
 
             echo ">>> Building frontend..."
             npm run build
