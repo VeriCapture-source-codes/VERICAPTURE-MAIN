@@ -1,14 +1,15 @@
 import React from 'react';
 import { Navbar, Nav, Container, Dropdown } from 'react-bootstrap';
+import defaultUserImage from '../assets/images/user.png';
 
 const Header = ({ user, userEmail }) => {
-    return (
+  return (
     <Navbar bg="white" expand="lg" className="px-4 shadow-sm">
       <Container fluid>
         {/* Logo */}
         <Navbar.Brand href="#">
           <img
-            src="../../src/assets/images/logo.png"
+            src="/logo.png"
             alt="VeriCapture Logo"
             height="40"
             className="d-inline-block align-top"
@@ -31,13 +32,13 @@ const Header = ({ user, userEmail }) => {
             <Dropdown.Toggle variant="light" className="d-flex align-items-center gap-2">
               {/* Left side: name + location */}
               <div className="text-start">
-                <div className="fw-semibold">{userEmail|| 'Guest'}</div>
+                <div className="fw-semibold">{userEmail || 'Guest'}</div>
                 <div className="text-muted small">Lagos, Nigeria</div>
               </div>
 
               {/* Right side: user image */}
               <img
-                src={user.data.thumbnail || '../../src/assets/images/user.png'} // fallback to default avatar
+                src={user?.data?.thumbnail || defaultUserImage}
                 alt="User"
                 width="36"
                 height="36"

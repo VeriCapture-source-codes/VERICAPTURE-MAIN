@@ -109,7 +109,7 @@ function GoLiveModal({ selectedCategory, onClose }) {
 
         const result = await apiRequest({
           method: 'POST',
-          route: '/users/upload-post',
+          route: '/posts/upload-post',
           formData,
         });
 
