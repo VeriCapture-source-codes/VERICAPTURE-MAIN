@@ -10,47 +10,53 @@ export const createPost = async (req, res, next) => {
       new ApiError(403, "You are not authorized. Please login to continue")
     );
   }
+  try {
+    const loggedInUser = await userModel.findById(userId);
+    if (!loggedInUser) {
+      return next(new ApiError(404, "User not found"));
+    }
 
-  const loggedInUser = await userModel.findById(userId);
-  if (!loggedInUser) {
-    return next(new ApiError(404, "User not found"));
+    const { caption, location, category } = req.body;
+
+    if (!location || !category) {
+      return next(new ApiError(400, "Location and Category are required."));
+    }
+
+    if (!req.file) {
+      return next(new ApiError(400, "Either a video or an image is required."));
+    }
+
+    const uploadResult = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { resource_type: "auto" },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        }
+      );
+      stream.end(req.file.buffer);
+    });
+
+    const post = await postModel.create({
+      user: loggedInUser._id,
+      media: uploadResult.secure_url,
+      caption,
+      location,
+      category,
+      cloudinary_id: uploadResult.public_id,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Post upload successful",
+      post,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "Post Validation failed",
+    });
   }
-
-  const { caption, location, category } = req.body;
-
-  if (!location || !category) {
-    return next(new ApiError(400, "Location and Category are required."));
-  }
-
-  if (!req.file) {
-    return next(new ApiError(400, "Either a video or an image is required."));
-  }
-
-  const uploadResult = await new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(
-      { resource_type: "auto" },
-      (error, result) => {
-        if (error) return reject(error);
-        resolve(result);
-      }
-    );
-    stream.end(req.file.buffer);
-  });
-
-  const post = await postModel.create({
-    user: loggedInUser._id,
-    media: uploadResult.secure_url,
-    caption,
-    location,
-    category,
-    cloudinary_id: uploadResult.public_id,
-  });
-
-  res.status(201).json({
-    success: true,
-    message: "Post upload successful",
-    post,
-  });
 };
 
 // export const createPost = async (req, res, next) => {
