@@ -48,6 +48,7 @@ jobs:
             npm run build
 
             echo ">>> Deploying frontend build..."
+            sudo mkdir -p /var/www/vericapture
             sudo rm -rf /var/www/vericapture/*
             sudo cp -r dist/* /var/www/vericapture/
 
