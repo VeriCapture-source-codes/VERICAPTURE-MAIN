@@ -49,7 +49,7 @@ jobs:
 
             echo ">>> Deploying frontend build..."
             sudo rm -rf /var/www/vericapture/*
-            sudo cp -r build/* /var/www/vericapture/
+            sudo cp -r dist/* /var/www/vericapture/
 
             echo ">>> Fixing permissions..."
             sudo chown -R www-data:www-data /var/www/vericapture
