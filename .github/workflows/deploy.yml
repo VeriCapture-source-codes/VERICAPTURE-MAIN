@@ -29,12 +29,12 @@ jobs:
             git pull origin main
 
             # === Backend Setup ===
-            cd backend
+            cd BACK-END
             npm ci
             pm2 restart vericapture-backend || pm2 start app.js --name vericapture-backend
 
             # === Frontend Setup ===
-            cd ../frontend
+            cd ../FRONT-END
             npm ci
             npm run build
 
