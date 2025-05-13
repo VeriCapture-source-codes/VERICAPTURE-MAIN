@@ -24,32 +24,38 @@ jobs:
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
             set -e
 
-            # === Navigate to project directory ===
+            echo ">>> Pulling latest code..."
             cd /var/www/VERICAPTURE-MAIN
+            git reset --hard
             git pull origin main
 
-            # === Backend Setup ===
+            echo ">>> Setting up backend..."
             cd BACK-END
             npm install
             pm2 restart vericapture-backend || pm2 start app.js --name vericapture-backend
 
-            # === Frontend Setup ===
+            echo ">>> Setting up frontend..."
             cd ../FRONT-END
             npm install
+
+            # --- FIX vite permission ---
+            chmod +x node_modules/.bin/vite
+
+            echo ">>> Building frontend..."
             npm run build
 
-            # === Deploy Built Frontend ===
+            echo ">>> Deploying frontend build..."
             sudo rm -rf /var/www/vericapture/*
             sudo cp -r build/* /var/www/vericapture/
 
-            # === Fix permissions ===
+            echo ">>> Fixing permissions..."
             sudo chown -R www-data:www-data /var/www/vericapture
             sudo chmod -R 755 /var/www/vericapture
 
-            # === Reload Nginx to reflect new frontend ===
+            echo ">>> Reloading Nginx..."
             sudo systemctl reload nginx
 
-            # === (Optional) Renew SSL ===
+            echo ">>> Renewing SSL certs..."
             sudo certbot renew --quiet
             sudo systemctl reload nginx
           EOF
