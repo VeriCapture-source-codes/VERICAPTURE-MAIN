@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Card, Button, Modal, Spinner } from 'react-bootstrap';
-
 const FeedCard = ({
   postId,
   user,
@@ -19,36 +18,28 @@ const FeedCard = ({
 }) => {
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [newComment, setNewComment] = useState('');
-  const [loading, setLoading] = useState(false); // 👈 NEW
-
+  const [loading, setLoading] = useState(false); //  NEW
   const handleLike = () => onLike && onLike();
-
   const handleComment = () => {
     setShowCommentModal(true);
   };
-
   const handlePostComment = async () => {
     if (!newComment.trim()) return;
     if (!onComment) return;
-
-    setLoading(true); // 👈 Start loading
+    setLoading(true); //  Start loading
     const success = await onComment(postId, newComment.trim());
-    setLoading(false); // 👈 Stop loading
-
+    setLoading(false); // Stop loading
     if (success) {
       setNewComment('');
       setShowCommentModal(false);
     }
   };
-
   const handleCloseCommentModal = () => {
     if (!loading) { // prevent closing while loading
       setShowCommentModal(false);
     }
   };
-
   const getFileExtension = (url) => url.split('.').pop().toLowerCase().split('?')[0];
-
   const renderMedia = (mediaUrl) => {
     const ext = getFileExtension(mediaUrl);
     if (['mp4', 'mov', 'mkv', 'avi', 'webm'].includes(ext)) {
@@ -63,7 +54,6 @@ const FeedCard = ({
       return <p>Unsupported media type</p>;
     }
   };
-
   return (
     <>
       <Card className="mb-4 shadow-sm rounded-4 p-3 border-0">
@@ -92,10 +82,8 @@ const FeedCard = ({
               </div>
             </div>
           </div>
-
           <Card.Text className="fs-5 mb-3 text-start">{text}</Card.Text>
           {renderMedia(media)}
-
           <div className="d-flex justify-content-between text-muted fs-6">
             <span
               role="button"
@@ -119,7 +107,6 @@ const FeedCard = ({
           </div>
         </Card.Body>
       </Card>
-
       <Modal show={showCommentModal} onHide={handleCloseCommentModal} centered>
         <Modal.Header closeButton={!loading}>
           <Modal.Title>Post a Comment</Modal.Title>
@@ -153,5 +140,4 @@ const FeedCard = ({
     </>
   );
 };
-
 export default FeedCard;

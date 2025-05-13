@@ -18,7 +18,7 @@ const Home = () => {
   const [showGoLiveModal, setShowGoLiveModal] = useState(false);
   const [userID, setUserID] = useState(null);
 
-  const categories = ['Crime', 'Protest', 'Accident', 'Riot', 'Traffic', 'General'];
+  const categories = ['crime','riot', 'traffic', 'general'];
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
