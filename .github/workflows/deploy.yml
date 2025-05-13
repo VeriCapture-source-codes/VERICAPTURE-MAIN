@@ -30,7 +30,7 @@ jobs:
 
             # === Backend Setup ===
             cd BACK-END
-            npm ci
+            npm install
             pm2 restart vericapture-backend || pm2 start app.js --name vericapture-backend
 
             # === Frontend Setup ===
