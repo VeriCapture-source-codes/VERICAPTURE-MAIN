@@ -1,4 +1,7 @@
-const baseUrl = import.meta.env.VITE_API_BASE_URL || '/api/v1/';
+const baseUrl =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:5000/api/v1/'
+    : 'https://www.vericapture.com.ng/api/v1/';  // Change to production domain
 
 export async function apiRequest({ method = 'GET', route, body = null, formData = null }) {
   try {
@@ -9,7 +12,7 @@ export async function apiRequest({ method = 'GET', route, body = null, formData 
     };
 
     if (formData) {
-      options.body = formData; // Don't set content-type manually
+      options.body = formData;
     } else if (body) {
       options.headers['Content-Type'] = 'application/json';
       options.headers['Accept'] = 'application/json';
