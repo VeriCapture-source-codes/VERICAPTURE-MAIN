@@ -1,7 +1,4 @@
-const baseUrl =
-  process.env.NODE_ENV === 'development'
-    ? 'http://localhost:5000/api/v1/'
-    : '/api/v1/'; // Let NGINX proxy this to the backend
+const baseUrl = import.meta.env.VITE_API_BASE_URL || '/api/v1/';
 
 export async function apiRequest({ method = 'GET', route, body = null, formData = null }) {
   try {
