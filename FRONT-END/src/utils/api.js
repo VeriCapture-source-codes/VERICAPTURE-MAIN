@@ -1,16 +1,18 @@
-const baseUrl = 'https://www.vericapture.com.ng/api/v1/'; // The Base URL for the API
+const baseUrl =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:5000/api/v1/'
+    : '/api/v1/'; // Let NGINX proxy this to the backend
 
 export async function apiRequest({ method = 'GET', route, body = null, formData = null }) {
   try {
     const options = {
       method: method.toUpperCase(),
       credentials: 'include', // for sending cookies
-      headers: {}, // We'll set headers conditionally
+      headers: {},
     };
 
     if (formData) {
-      options.body = formData; 
-      // Don't set Content-Type manually for FormData — browser will handle boundary!
+      options.body = formData; // Don't set content-type manually
     } else if (body) {
       options.headers['Content-Type'] = 'application/json';
       options.headers['Accept'] = 'application/json';
@@ -18,7 +20,6 @@ export async function apiRequest({ method = 'GET', route, body = null, formData 
     }
 
     const response = await fetch(`${baseUrl}${route}`, options);
-
     const data = await response.json();
 
     return {
