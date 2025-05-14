@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:5000/api/v1'; // The Base URL for the API
+const baseUrl = 'https://www.vericapture.com.ng/api/v1/'; // The Base URL for the API
 
 export async function apiRequest({ method = 'GET', route, body = null, formData = null }) {
   try {
