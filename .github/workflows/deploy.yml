@@ -20,8 +20,10 @@ jobs:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Deploy app to EC2
+        env:
+          ENV_PROD: ${{ secrets.ENV_PROD }}  # Make ENV_PROD available to the script
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << EOF
             set -e
 
             echo ">>> Pulling latest code..."
@@ -32,6 +34,12 @@ jobs:
             echo ">>> Setting up backend..."
             cd BACK-END
             npm install
+
+            echo ">>> Writing .env file..."
+            cat > .env <<EOL
+            $ENV_PROD
+            EOL
+
             pm2 restart vericapture-backend || pm2 start app.js --name vericapture-backend
 
             echo ">>> Setting up frontend..."
@@ -42,7 +50,6 @@ jobs:
             chmod +x node_modules/.bin/vite
             chmod +x node_modules/esbuild/bin/esbuild || true
             chmod +x node_modules/@esbuild/linux-x64/bin/esbuild || true
-
 
             echo ">>> Building frontend..."
             npm run build
