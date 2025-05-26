@@ -46,24 +46,29 @@ jobs:
             cd ../FRONT-END
             npm install
 
-            echo ">>> Writing frontend .env.production..."
-            cat > .env.production <<EOL
+            echo ">>> Writing frontend .env file..."
+            cat > .env <<EOL
             VITE_API_BASE_URL=https://vericapture.com.ng/api/v1/
             EOL
 
-            echo ">>> Verifying .env.production content..."
-            cat .env.production
-            echo ">>> Environment variables during build:"
-            NODE_ENV=production npm run build
-            echo ">>> Build completed"
+            echo ">>> Verifying .env content..."
+            cat .env
 
             # --- FIX vite permission ---
             chmod +x node_modules/.bin/vite
             chmod +x node_modules/esbuild/bin/esbuild || true
             chmod +x node_modules/@esbuild/linux-x64/bin/esbuild || true
 
-            echo ">>> Building frontend..."
-            npm run build
+            echo ">>> Building frontend with environment variables..."
+            NODE_ENV=production npm run build
+
+            echo ">>> Verifying build doesn't contain localhost..."
+            if grep -r "localhost:5000" dist/; then
+              echo "❌ ERROR: Build still contains localhost URLs!"
+              exit 1
+            else
+              echo "✅ Build is clean - no localhost URLs found"
+            fi
 
             echo ">>> Deploying frontend build..."
             sudo mkdir -p /var/www/vericapture

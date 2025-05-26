@@ -1,7 +1,7 @@
 const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://vericapture.com.ng/api/v1/' ;
-console.log('Environment mode:', import.meta.env.MODE);
-console.log('Base URL from env:', import.meta.env.VITE_API_BASE_URL);
-console.log('Final baseUrl:', baseUrl);
+
+console.log('🔍 Debug - baseUrl:', baseUrl);
+console.log('🔍 Debug - Full URL will be:', `${baseUrl}users/sign-in-user`);
 
 export async function apiRequest({ method = 'GET', route, body = null, formData = null }) {
   try {
