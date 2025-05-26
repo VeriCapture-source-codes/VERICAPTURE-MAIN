@@ -1,5 +1,5 @@
 //const baseUrl =
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://vericapture.com.ng/api/v1/';
 
   //import.meta.env.MODE === 'development'
     //? 'http://localhost:5000/api/v1/'
